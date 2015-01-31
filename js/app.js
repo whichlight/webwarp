@@ -220,6 +220,17 @@ $("#flood").mousedown(function(){
   deluge = 1;
 });
 
+var handleStart = function(e){
+    e.preventDefault();
+    deluge = 1;
+}
+
+
+var handleEnd = function(e){
+    e.preventDefault();
+    deluge = 0;
+}
+
 $(document).keyup(function(evt) {
   if (evt.keyCode == 32) {
   deluge = 0;
@@ -250,6 +261,10 @@ function getData(res) {
 }
 
 function init(){
+
+    var el = document.getElementById("flood");
+    el.addEventListener("touchstart", handleStart, false);
+    el.addEventListener("touchend", handleEnd, false);
 
   logo = new Image();
   logo.src = "media/snake-logo-1.gif";
