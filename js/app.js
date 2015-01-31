@@ -100,12 +100,22 @@ blacklist = [
 
 function pickHost() {
   host = pickRandomProperty(data);
-  while(data[host].length < 10 || $.inArray(host, blacklist) == 0) {
+  while(data[host].length < 15 || $.inArray(host, blacklist) != -1 || countGoodImages(host) < 5) {
     delete data.host;
     host = pickRandomProperty(data);
   }
   console.log(host);
   console.log(data[host].length)
+}
+
+function countGoodImages(host) {
+  var count = 0;
+  for (var i = 0; i < data[host].length; i++) {
+    if(data[host][i].indexOf(".png") != -1 || data[host][i].indexOf(".gif") != -1) {
+      count = count + 1;
+    }
+  }
+  return count;
 }
 
 function pickRandomProperty(obj) {
@@ -118,7 +128,12 @@ function pickRandomProperty(obj) {
 }
 
 function getRandomElement(arr){
-  return arr[Math.floor(Math.random()*arr.length)];
+  var idx = Math.floor(Math.random()*arr.length);
+  var element = arr[idx];
+  // if(Math.random() < 0 || (element.indexOf(".png") == -1 && element.indexOf(".gif") == -1)) {
+  //   return getRandomElement(arr);
+  // }
+  return element;
 }
 
 function createDrop(){
