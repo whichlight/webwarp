@@ -12,6 +12,8 @@ var growth= growth0;
 var state = "calm";
 var deluge = 0;
 
+var refresh_rate = 20000;
+
 //2000 1.01  --> 4 drops
 
 var MAX_ON_SCREEN = 25;
@@ -85,6 +87,15 @@ function update(){
   });
 }
 
+function pickRandomProperty(obj) {
+    var result;
+    var count = 0;
+    for (var prop in obj)
+        if (Math.random() < 1/++count)
+           result = prop;
+    return result;
+}
+
 function getRandomElement(arr){
   return arr[Math.floor(Math.random()*arr.length)];
 }
@@ -92,8 +103,8 @@ function getRandomElement(arr){
 function createDrop(){
 
   if( num_drops < MAX_ON_SCREEN && state == "deluge"){
-    var val = getRandomElement(data);
-    var src = "../media/" + val;
+    var val = getRandomElement(data[host]);
+    var src = "media/" + val;
     var d = new Drop(src)
       drops.push(d);
     console.log('create drop ' + $('img').length + ' drops now');
@@ -136,7 +147,19 @@ $(document).keyup(function(evt) {
 });
 
 
+function getData(res) {
+  $.getJSON("http://localhost:8080/data/data.js",function(response) {
+    data = response;
+    if(res) {
+      res();
+    }
+  });
+  setTimeout(function(){getData()},refresh_rate);
+}
+
 function init(){
+  host = pickRandomProperty(data);
+  console.log(host);
   render();
 
   setInterval(function(){
@@ -168,7 +191,7 @@ function init(){
 
 
 $(document).ready(function(){
-  init();
+  getData(init);
 });
 
 
