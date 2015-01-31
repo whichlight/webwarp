@@ -5,9 +5,17 @@ height = window.innerHeight;
 var img = new Image();
 var drops = [];
 
-var drop_rate = 200;
+var drop0 = 280;
+var drop_rate = drop0;
+var growth0=1.08;
+var growth= growth0;
+var state = "calm";
+var deluge = 0;
 
-var speed = 1.1;
+//2000 1.01  --> 4 drops
+
+var MAX_ON_SCREEN = 25;
+var num_drops = 0;
 
 function Drop(src){
   this.src = src;
@@ -24,7 +32,7 @@ Drop.prototype.update = function(){
 
   var $i = $(this.image);
 
-  this.rx *= speed;
+  this.rx *= growth;
   this.ry = $i.height()
 
   //visual
@@ -44,11 +52,34 @@ Drop.prototype.update = function(){
 
 function render() {
   requestAnimationFrame(render);
+
+  if(deluge ==0){
+    state = "calm";
+    growth= growth0;
+  }
+
+  if(deluge ==1){
+    state = "deluge";
+
+  }
+
+  if (state == "calm"){
+ //   $('img').remove();
+  }
+
   update();
+
+
 }
 
 
 function update(){
+
+  num_drops = $('img').length
+
+  if(num_drops == 0){
+    createDrop();
+  }
   drops.forEach(function(d){
     d.update();
   });
@@ -59,17 +90,82 @@ function getRandomElement(arr){
 }
 
 function createDrop(){
-  var val = getRandomElement(data);
-  var src = "../media/" + val;
-  var d = new Drop(src)
-  drops.push(d);
-  setTimeout(function(){createDrop()},drop_rate);
+
+  if( num_drops < MAX_ON_SCREEN && state == "deluge"){
+    var val = getRandomElement(data);
+    var src = "../media/" + val;
+    var d = new Drop(src)
+      drops.push(d);
+    console.log('create drop ' + $('img').length + ' drops now');
+  setTimeout(function(){
+    createDrop();
+  },drop_rate);
+  }
 }
 
-function init(){
+
+
+
+/*
+$("#flood").click(function(){
   createDrop();
+})
+*/
+
+$("#flood").mouseup(function(){
+  deluge = 0;
+});
+
+$("#flood").mousedown(function(){
+  deluge = 1;
+});
+
+$(document).keyup(function(evt) {
+  if (evt.keyCode == 32) {
+  deluge = 0;
+    space = false;
+  }
+}).keydown(function(evt) {
+
+  if (evt.keyCode == 32) {
+  evt.stopPropagation();
+   evt.preventDefault();
+  deluge = 1;
+    space = true;
+  }
+});
+
+
+function init(){
   render();
+
+  setInterval(function(){
+
+  console.log(growth, drop_rate, num_drops);
+    if(deluge ==1){
+      if(growth < 1.25){
+        growth+=0.005
+      }
+
+      if(num_drops<8){
+        drop_rate -=10;
+      }else{
+        drop_rate +=10;
+      }
+    }
+    if(deluge ==0){
+      if(growth > growth0){
+        growth -=0.3;
+      }
+
+      if(drop_rate < drop0){
+        drop_rate +=50;
+      }
+    }
+  },500);
 }
+
+
 
 $(document).ready(function(){
   init();
