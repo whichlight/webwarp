@@ -217,6 +217,7 @@ function init(){
 
 
 $(document).ready(function(){
+    $.ajaxSetup({ cache: false });
   getData(init);
 });
 
