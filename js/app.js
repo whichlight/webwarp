@@ -6,9 +6,9 @@ var img = new Image();
 var drops = [];
 var logo;
 
-var drop0 = 280;
+var drop0 = 300;
 var drop_rate = drop0;
-var growth0=1.08;
+var growth0=1.09;
 var growth= growth0;
 var state = "calm";
 var deluge = 0;
@@ -21,6 +21,8 @@ var anglespeed = 0.3;
 var basePitch = 110;
 var drones = [];
 var calmdrone = [];
+
+var refresh_rate = 20000;
 
 //2000 1.01  --> 4 drops
 
@@ -54,7 +56,7 @@ Drop.prototype.update = function(){
 
   //remove
   if(this.rx > width*2){
-     console.log('too big, removed');
+     // console.log('too big, removed');
      drops.splice(drops.indexOf(this),1);
      $(this.image).remove();
   }
@@ -132,18 +134,69 @@ function update(){
   });
 }
 
+blacklist = [
+  'www.tumblr.com',
+  'dednewb.tumblr.com',
+  'kendrickxlamar.tumblr.com',
+  'hellyeahrihannafenty.tumblr.com',
+  '2cars48.tumblr.com',
+  'omgewbetch.tumblr.com',
+  'nikeswooshes.tumblr.com',
+  'david-bolin.tumblr.com',
+  'batimientoscerebrales.tumblr.com',
+  'goth5.tumblr.com',
+  // 'xerui.tumblr.com',
+  // 'furples.tumblr.com',
+  // mikehottman.tumblr.com
+  // olivegarden.tumblr.com
+]
+
+function pickHost() {
+  host = pickRandomProperty(data);
+  while(data[host].length < 15 || $.inArray(host, blacklist) != -1 || countGoodImages(host) < 5) {
+    delete data.host;
+    host = pickRandomProperty(data);
+  }
+  console.log(host);
+  console.log(data[host].length)
+}
+
+function countGoodImages(host) {
+  var count = 0;
+  for (var i = 0; i < data[host].length; i++) {
+    if(data[host][i].indexOf(".png") != -1 || data[host][i].indexOf(".gif") != -1) {
+      count = count + 1;
+    }
+  }
+  return count;
+}
+
+function pickRandomProperty(obj) {
+    var result;
+    var count = 0;
+    for (var prop in obj)
+        if (Math.random() < 1/++count)
+           result = prop;
+    return result;
+}
+
 function getRandomElement(arr){
-  return arr[Math.floor(Math.random()*arr.length)];
+  var idx = Math.floor(Math.random()*arr.length);
+  var element = arr[idx];
+  // if(Math.random() < 0 || (element.indexOf(".png") == -1 && element.indexOf(".gif") == -1)) {
+  //   return getRandomElement(arr);
+  // }
+  return element;
 }
 
 function createDrop(){
 
   if( num_drops < MAX_ON_SCREEN && state == "deluge"){
-    var val = getRandomElement(data);
-    var src = "../media/" + val;
+    var val = getRandomElement(data[host]);
+    var src = "media/" + val;
     var d = new Drop(src)
       drops.push(d);
-    console.log('create drop ' + $('.drop').length + ' drops now');
+    // console.log('create drop ' + $('img').length + ' drops now');
   setTimeout(function(){
     createDrop();
   },drop_rate);
@@ -164,6 +217,9 @@ $("#flood").mouseup(function(){
 });
 
 $("#flood").mousedown(function(){
+  if (deluge == 0) {
+    pickHost();
+  }
   deluge = 1;
 });
 
@@ -177,11 +233,24 @@ $(document).keyup(function(evt) {
   if (evt.keyCode == 32) {
   evt.stopPropagation();
    evt.preventDefault();
+     if (deluge == 0) {
+    pickHost();
+  }
   deluge = 1;
     space = true;
   }
 });
 
+
+function getData(res) {
+  $.getJSON("http://localhost:8080/data/data.js",function(response) {
+    data = response;
+    if(res) {
+      res();
+    }
+  });
+  setTimeout(function(){getData()},refresh_rate);
+}
 
 function init(){
 
@@ -228,7 +297,7 @@ function init(){
     console.log(growth, drop_rate, num_drops);
     if(deluge ==1){
       if(growth < 1.25){
-        growth+=0.005
+        growth+=0.009
       }
 
       if(num_drops<8){
@@ -239,7 +308,7 @@ function init(){
     }
     if(deluge ==0){
       if(growth > growth0){
-        growth -=0.3;
+        growth -=0.2;
       }
 
       if(drop_rate < drop0){
@@ -255,8 +324,10 @@ function init(){
 
 
 $(document).ready(function(){
+
   checkFeatureSupport();
-  init();
+    $.ajaxSetup({ cache: false });
+  getData(init);
 });
 
 
