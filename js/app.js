@@ -92,6 +92,12 @@ blacklist = [
   'dednewb.tumblr.com',
   'kendrickxlamar.tumblr.com',
   'hellyeahrihannafenty.tumblr.com',
+  '2cars48.tumblr.com',
+  'omgewbetch.tumblr.com',
+  'nikeswooshes.tumblr.com',
+  'david-bolin.tumblr.com',
+  'batimientoscerebrales.tumblr.com',
+  'goth5.tumblr.com',
   // 'xerui.tumblr.com',
   // 'furples.tumblr.com',
   // mikehottman.tumblr.com
