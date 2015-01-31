@@ -87,6 +87,20 @@ function update(){
   });
 }
 
+blacklist = [
+  'www.tumblr.com',
+]
+
+function pickHost() {
+  host = pickRandomProperty(data);
+  while(data[host].length < 10 || $.inArray(host, blacklist) == 0) {
+    delete data.host;
+    host = pickRandomProperty(data);
+  }
+  console.log(host);
+  console.log(data[host].length)
+}
+
 function pickRandomProperty(obj) {
     var result;
     var count = 0;
@@ -128,6 +142,9 @@ $("#flood").mouseup(function(){
 });
 
 $("#flood").mousedown(function(){
+  if (deluge == 0) {
+    pickHost();
+  }
   deluge = 1;
 });
 
@@ -141,6 +158,9 @@ $(document).keyup(function(evt) {
   if (evt.keyCode == 32) {
   evt.stopPropagation();
    evt.preventDefault();
+     if (deluge == 0) {
+    pickHost();
+  }
   deluge = 1;
     space = true;
   }
@@ -158,8 +178,7 @@ function getData(res) {
 }
 
 function init(){
-  host = pickRandomProperty(data);
-  console.log(host);
+  pickHost();
   render();
 
   setInterval(function(){
