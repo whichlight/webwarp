@@ -157,8 +157,6 @@ function pickHost() {
     delete data.host;
     host = pickRandomProperty(data);
   }
-  console.log(host);
-  console.log(data[host].length)
 }
 
 function countGoodImages(host) {
@@ -196,7 +194,6 @@ function createDrop(){
     var src = "media/" + val;
     var d = new Drop(src)
       drops.push(d);
-    // console.log('create drop ' + $('img').length + ' drops now');
   setTimeout(function(){
     createDrop();
   },drop_rate);
@@ -280,13 +277,13 @@ function init(){
   drones.push(d);
 
 
-  var d = new Drone(basePitch*3, 0.8);
+  var d = new Drone(basePitch*3, 0.5);
   calmdrone.push(d);
 
-  var d  = new Drone(1.5 * basePitch*3, 0.8);
+  var d  = new Drone(1.5 * basePitch*3, 0.4);
   calmdrone.push(d);
 
-  var d  = new Drone(3*1.5 * basePitch*3, 0.8);
+  var d  = new Drone(3*1.5 * basePitch*3, 0.4);
   calmdrone.push(d);
 
 
@@ -294,7 +291,6 @@ function init(){
 
   setInterval(function(){
 
-    console.log(growth, drop_rate, num_drops);
     if(deluge ==1){
       if(growth < 1.25){
         growth+=0.009
@@ -325,9 +321,9 @@ function init(){
 
 $(document).ready(function(){
 
+    infoAlert();
   checkFeatureSupport();
-    $.ajaxSetup({ cache: false });
-  getData(init);
+    init();
 });
 
 
@@ -346,4 +342,8 @@ var checkFeatureSupport = function(){
   catch (err){
     console.log('motion not supported');
   }
+}
+
+var infoAlert = function(){
+      alert("Web Warp \nRelax into the sensation and absorb the images as they arrive. Gently, then more rapidly, they will engulf you. Face the cascade, savor the flow.\n\nby Audrey Fox, Cameron Ketcham, Kawandeep Virdee, James Donovan.\nMade for ArtHackDay Deluge.");
 }

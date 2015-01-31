@@ -49,7 +49,6 @@ Drone.prototype.play = function(){
 Drone.prototype.stop = function(){
 
     this.setVolume(0);
-    console.log(this.volume);
 //    this.osc.disconnect();
     return false;
 }
