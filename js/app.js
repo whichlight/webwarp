@@ -252,7 +252,7 @@ function getData(res) {
 function init(){
 
   logo = new Image();
-  logo.src = "../media/snake-logo-1.gif";
+  logo.src = "media/snake-logo-1.gif";
   $(logo).addClass("logo");
   logo.width = '200';
   $('#flood').append(logo);
