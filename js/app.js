@@ -5,7 +5,7 @@ height = window.innerHeight;
 var img = new Image();
 var drops = [];
 
-var drop0 = 280;
+var drop0 = 350;
 var drop_rate = drop0;
 var growth0=1.08;
 var growth= growth0;
@@ -46,7 +46,7 @@ Drop.prototype.update = function(){
 
   //remove
   if(this.rx > width*2){
-     console.log('too big, removed');
+     // console.log('too big, removed');
      drops.splice(drops.indexOf(this),1);
      $(this.image).remove();
   }
@@ -89,6 +89,13 @@ function update(){
 
 blacklist = [
   'www.tumblr.com',
+  'dednewb.tumblr.com',
+  'kendrickxlamar.tumblr.com',
+  'hellyeahrihannafenty.tumblr.com',
+  // 'xerui.tumblr.com',
+  // 'furples.tumblr.com',
+  // mikehottman.tumblr.com
+  // olivegarden.tumblr.com
 ]
 
 function pickHost() {
@@ -121,7 +128,7 @@ function createDrop(){
     var src = "media/" + val;
     var d = new Drop(src)
       drops.push(d);
-    console.log('create drop ' + $('img').length + ' drops now');
+    // console.log('create drop ' + $('img').length + ' drops now');
   setTimeout(function(){
     createDrop();
   },drop_rate);
@@ -183,7 +190,7 @@ function init(){
 
   setInterval(function(){
 
-  console.log(growth, drop_rate, num_drops);
+  // console.log(growth, drop_rate, num_drops);
     if(deluge ==1){
       if(growth < 1.25){
         growth+=0.005
