@@ -5,9 +5,9 @@ height = window.innerHeight;
 var img = new Image();
 var drops = [];
 
-var drop0 = 350;
+var drop0 = 300;
 var drop_rate = drop0;
-var growth0=1.08;
+var growth0=1.09;
 var growth= growth0;
 var state = "calm";
 var deluge = 0;
@@ -214,7 +214,7 @@ function init(){
   // console.log(growth, drop_rate, num_drops);
     if(deluge ==1){
       if(growth < 1.25){
-        growth+=0.005
+        growth+=0.009
       }
 
       if(num_drops<8){
@@ -225,7 +225,7 @@ function init(){
     }
     if(deluge ==0){
       if(growth > growth0){
-        growth -=0.3;
+        growth -=0.2;
       }
 
       if(drop_rate < drop0){
